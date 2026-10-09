@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="nl"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Het Dossierhuis</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@300;400;600&display=swap');
+*{box-sizing:border-box}
+:root{color-scheme:dark;--bg:#07080b;--line:#2c2d32;--text:#ddd7cd;--muted:#8c8987;--red:#9d2637;--red2:#c43a4c;--gold:#c5a66c;--paper:#ded5c2;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 8%,rgba(116,25,35,.25),transparent 40%),radial-gradient(circle at 85% 85%,rgba(126,87,36,.08),transparent 35%),var(--bg);color:var(--text);font:14px/1.7 Inter,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer}
+h1,h2,h3{font-family:Cinzel,Georgia,serif;margin:0}
+.screen{min-height:100vh;display:none;align-items:center;justify-content:center;padding:28px}.screen.active{display:flex;animation:fade .6s}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}}
+.home{text-align:center;max-width:760px;width:100%}
+.badge{display:inline-flex;align-items:center;gap:10px;padding:9px 16px;border:1px solid rgba(197,166,108,.4);color:var(--gold);border-radius:100px;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:28px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--red2);box-shadow:0 0 15px var(--red2);animation:bl 1.5s infinite}@keyframes bl{50%{opacity:.25}}
+.home h1{font-size:clamp(46px,9vw,100px);line-height:.9;letter-spacing:5px;text-transform:uppercase}
+.sub{margin:26px 0 38px;color:#88878b;letter-spacing:4px;font-size:11px;text-transform:uppercase}
+.menu{display:flex;flex-direction:column;gap:10px;max-width:380px;margin:auto}
+.start{padding:16px 30px;border:1px solid rgba(197,166,108,.7);color:#eee4d3;background:rgba(12,12,14,.85);letter-spacing:3px;font-family:Cinzel,serif;transition:.25s}
+.start:hover{transform:translateY(-2px);border-color:var(--gold)}.start.alt{border-color:#4a4540;color:#b9b0a2;font-size:12px}
+.doc{width:100%;max-width:900px}.topline{display:flex;justify-content:space-between;color:#5d5d62;font:10px monospace;letter-spacing:2px;margin-bottom:18px}
+.paperbox{position:relative;background:linear-gradient(135deg,rgba(255,255,255,.035),transparent),#171411;border:1px solid #443a30;padding:50px;box-shadow:0 40px 100px #000}
+.paperbox h2{font-weight:500;font-size:34px;margin:0 0 20px}.paperbox p{color:#a49e95;line-height:1.9;font-size:15px}
+.stamp{position:absolute;top:30px;right:34px;padding:7px 12px;border:2px solid rgba(165,30,45,.45);color:rgba(194,43,60,.65);transform:rotate(7deg);font-weight:700;letter-spacing:3px}
+.cls{color:var(--red2);font-size:10px;letter-spacing:4px;font-weight:700;margin-bottom:28px}
+.sig{margin-top:28px;padding-top:16px;border-top:1px solid #38332e;width:290px;color:#77716a;font:12px monospace}.sig strong{display:block;color:#c7bba9;margin-top:5px}
+.actions{display:flex;gap:10px;margin-top:34px;flex-wrap:wrap}
+.btn{border:1px solid #4a4540;background:#211d19;color:#d9d0c1;padding:12px 20px;transition:.2s;font-size:13px}.btn:hover{border-color:var(--gold)}
+.btn.p{background:#711e2b;border-color:#9a3040;color:#fff}.btn.p:hover{background:#902738}.btn.g{background:#1f3a24;border-color:#3f7a4b;color:#cfe9d4}
+.office{padding:40px;background:radial-gradient(circle at 75% 15%,rgba(183,140,66,.08),transparent 25%),#101115;border:1px solid var(--line)}
+.office .ic{width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#202126;border:1px solid #45464d;font-size:30px;margin-bottom:20px}
+.office .role{color:var(--red2);letter-spacing:3px;text-transform:uppercase;font-size:10px;margin-bottom:10px}.office h1{font-size:30px;margin-bottom:14px}.office p{max-width:700px;color:#96969c}
+.warn{margin-top:24px;border-left:2px solid var(--red);background:rgba(157,38,55,.06);padding:16px}.warn span{display:block;color:#67676c;font-size:9px;letter-spacing:2px;margin-bottom:6px}
+.panel{max-width:620px;width:100%;background:#111216;border:1px solid var(--line);padding:30px}.panel h2{margin-bottom:12px}.panel p{color:#95959b}
+.big{font:700 44px Cinzel,serif;letter-spacing:8px;color:var(--gold);text-align:center;margin:12px 0}
+#dash{display:none;min-height:100vh;padding:24px}#dash.active{display:block;animation:fade .6s}.cont{max-width:1150px;margin:auto}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:16px;flex-wrap:wrap}
+.dt{font-size:28px;letter-spacing:3px}.ds{color:#696970;font-size:10px;letter-spacing:2px;margin-top:4px}
+.hud{display:flex;gap:8px;flex-wrap:wrap}.pill{border:1px solid #68343d;color:#c47a85;padding:8px 13px;font:11px monospace;background:#100c0e}.pill.race{border-color:#3f7a4b;color:#9fd6ac;background:#0c120e}
+.bar{height:3px;background:#1d1e22;margin-bottom:14px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold));transition:.5s}
+.tabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:5px;margin-bottom:20px}
+.tab{flex:0 0 auto;padding:12px 17px;border:1px solid #292a2e;background:#111216;color:#7a7b80;font-size:10px;letter-spacing:1px}.tab.on{background:#25181b;border-color:#783b45;color:#ddd2c5}
+.g2{display:grid;grid-template-columns:1.4fr .6fr;gap:16px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.g4{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.card{background:rgba(17,18,22,.96);border:1px solid var(--line);padding:24px;margin-bottom:16px}.card h2{margin-bottom:14px;font-family:Georgia,serif;color:#e0d7ca;font-size:21px}.card p{color:#95959b;font-size:14px}
+.red{color:var(--red2)!important}.gold{color:var(--gold)!important}
+.tl .it{display:grid;grid-template-columns:70px 1fr;gap:14px;padding:12px 0;border-bottom:1px solid #25262a}.tl .tm{color:var(--red2);font-family:monospace}.tl p{margin:0}
+.ev{min-height:150px;padding:18px;background:#141519;border:1px solid #292a2f;transition:.2s;cursor:pointer}.ev:hover{transform:translateY(-3px);border-color:#765048}.ev.lk{opacity:.33;filter:grayscale(1);cursor:not-allowed}
+.ev .i{font-size:30px;margin:6px 0 12px}.ev h3{font-family:Georgia,serif;font-size:15px;color:#d9d0c5;margin-bottom:6px}.ev small{color:#696a70}
+.sus{background:#121317;border:1px solid #292a2e;padding:22px}.sus .fc{width:62px;height:62px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#24252a;font-size:30px;margin-bottom:12px}
+.sus h2{font-family:Georgia,serif;font-size:20px}.sus .ro{color:#716e70;font-size:9px;letter-spacing:2px;margin:6px 0 12px}.sus p{color:#89898f;font-size:13px}
+.qs{display:flex;flex-direction:column;gap:6px;margin:10px 0}.qs button{text-align:left;padding:8px 12px;background:#0d0e11;border:1px solid #2a2b31;color:#b9bac0;font-size:12px}.qs button:hover{border-color:var(--gold)}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>select,.row>input{flex:1;min-width:140px;margin:0}
+.dlg{background:#0b0c0e;border:1px solid #25262a;padding:10px 14px;margin:8px 0;color:#b4b5bb;font-size:13px}.dlg i{display:block;color:var(--muted);font-size:11px}.dlg.cf{border-left:2px solid var(--red2)}
+.pz{background:#121317;border:1px solid var(--line);padding:24px;margin-bottom:16px}.pn{color:#91404b;font:10px monospace;letter-spacing:2px}.pz h2{font-family:Georgia,serif;color:#ddd3c5;margin:6px 0 10px}
+.paper{background:var(--paper);color:#29251f;padding:20px;margin:16px 0;font-family:Georgia,serif;line-height:1.8}
+input,select,textarea{width:100%;padding:12px;background:#08090b;border:1px solid #36373c;outline:none;margin-top:6px}input:focus,select:focus,textarea:focus{border-color:#8b514b}
+textarea{min-height:340px;resize:vertical;line-height:1.7}
+.ok{display:none;margin-top:14px;padding:15px;background:#191a16;border-left:2px solid var(--gold);color:#c4b48e}.ok.s{display:block}
+.fin{max-width:760px;margin:auto;text-align:center;padding:34px;background:#111216;border:1px solid #303136}
+.res{display:none;text-align:left;margin-top:22px;padding:20px;background:#18171a;border-left:2px solid var(--red2);line-height:1.8}.rank{font:700 56px Cinzel,serif;color:var(--gold);text-align:center}
+.lb{width:100%;border-collapse:collapse;margin-top:10px}.lb td{padding:9px 10px;border-bottom:1px solid #25262a;font-size:13px}.lb tr.me td{color:var(--gold);font-weight:600}.lb .t{color:var(--muted);text-align:right;font-family:monospace}
+.mod{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.88);align-items:center;justify-content:center;padding:20px}.mod.on{display:flex}
+.mb{width:100%;max-width:660px;max-height:85vh;overflow:auto;background:#141519;border:1px solid #393a40;padding:28px;box-shadow:0 30px 100px #000}.mb h2{font-family:Georgia,serif;color:#ded4c8}.mb p{color:#98989e;white-space:pre-line}
+.x{float:right;border:0;background:none;color:#888;font-size:27px}
+.toast{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:300;max-width:330px;padding:13px 18px;background:#17181c;border:1px solid #633843;transform:translateY(160px);opacity:0;transition:.3s}.toast.on{transform:none;opacity:1}
+.fl{animation:f2 .6s}@keyframes f2{0%{background:#5a1a24}}
+@media(max-width:800px){.g2,.g3,.g4{grid-template-columns:1fr}.paperbox,.office{padding:28px 20px}.stamp{display:none}}
+</style></head><body>
+
+<section id="home" class="screen active"><div class="home">
+<div class="badge"><span class="dot"></span>Politie Brabant • Vertrouwelijk dossier</div>
+<h1>Het<br>Dossierhuis</h1>
+<div class="sub">Detectives en puzzels • lekker licht</div>
+<div class="menu">
+<button class="start" onclick="drawPick();go('pick')">SOLO SPELEN</button>
+<button class="start" onclick="go('join')">MEEDOEN AAN WEDSTRIJD</button>
+<button class="start alt" onclick="go('view')">👀 KLASSEMENT BEKIJKEN</button>
+<button class="start alt" onclick="go('cmp')">🏆 UITSLAGCODES VERGELIJKEN</button>
+<button class="start alt" onclick="go('adm')">🔐 BEHEERDER</button>
+</div></div></section>
+
+<section id="pick" class="screen"><div class="panel" style="max-width:640px"><h2>Kies je spel</h2><div class="menu" id="pickbox" style="max-width:none"></div><div class="actions"><button class="btn" onclick="go('home')">TERUG</button></div></div></section>
+
+<section id="join" class="screen"><div class="panel"><h2>Meedoen aan een wedstrijd</h2>
+<p>Vraag de wedstrijdcode aan de beheerder. Wie het snelst de zaak oplost, wint.</p>
+<input id="jn" placeholder="Jouw naam" maxlength="20"><input id="jc" placeholder="Wedstrijdcode, bv. KROK42" maxlength="12" style="text-transform:uppercase">
+<div class="actions"><button class="btn p" onclick="joinRace()">MEEDOEN →</button><button class="btn" onclick="go('home')">TERUG</button></div></div></section>
+
+<section id="view" class="screen"><div class="panel"><h2>Klassement bekijken</h2>
+<p>Alleen kijken: voer een wedstrijdcode in en volg de tijden live. Hiervoor heb je geen schrijfrechten nodig.</p>
+<div class="row"><input id="vc" placeholder="Wedstrijdcode" maxlength="12" style="text-transform:uppercase" onkeydown="if(event.key=='Enter')viewRace()"><button class="btn p" onclick="viewRace()">BEKIJKEN</button></div>
+<div id="vb"></div><div class="actions"><button class="btn" onclick="leaveView()">TERUG</button></div></div></section>
+
+<section id="cmp" class="screen"><div class="panel"><h2>Uitslagcodes vergelijken</h2>
+<p>Elke speler krijgt na het oplossen een uitslagcode. Plak alle codes hieronder, één per regel, en zie wie het snelst was. Dit werkt zonder delen of internetverbinding met het artefact.</p>
+<textarea id="cin" style="min-height:140px" placeholder="D055-....&#10;D055-...."></textarea>
+<div class="actions"><button class="btn p" onclick="cmpGo()">VERGELIJK</button><button class="btn" onclick="go('home')">TERUG</button></div><div id="cout"></div></div></section>
+
+<section id="wait" class="screen"><div class="panel" style="text-align:center"><h2>Wachtkamer</h2><p>Je doet mee aan wedstrijd</p><div class="big" id="wc"></div>
+<p id="ws">Wachten tot de beheerder de wedstrijd start…</p><p id="wp" style="font-size:13px"></p><button class="btn g" id="wb" style="display:none;margin:10px 0" onclick="startMine()">▶ START MIJN POGING</button>
+<div class="actions" style="justify-content:center"><button class="btn" onclick="leave()">VERLATEN</button></div></div></section>
+
+<section id="adm" class="screen"><div class="panel" id="admbox"><h2>Beheerder</h2><p>Voer de beheerderscode in.</p>
+<input id="ac" type="password" placeholder="Beheerderscode" onkeydown="if(event.key=='Enter')admLogin()">
+<div class="actions"><button class="btn p" onclick="admLogin()">INLOGGEN</button><button class="btn" onclick="go('home')">TERUG</button></div></div></section>
+
+<section id="letter" class="screen"><div class="doc" id="lbox"></div></section>
+
+<section id="brief" class="screen"><div class="doc" id="bbox"></div></section>
+
+<section id="dash"><div class="cont">
+<div class="dh"><div><h1 class="dt" id="dt">DOSSIER</h1><div class="ds" id="ds"></div></div><div class="hud"><span class="pill race" id="rk" style="display:none"></span><span class="pill" id="pr"></span><button class="pill" onclick="reset()">⚠ RESET</button></div></div>
+<div class="bar"><i id="pb"></i></div><nav class="tabs" id="tabs"></nav><div id="pg"></div></div></section>
+
+<div class="mod" id="mod"><div class="mb"><button class="x" onclick="cm()">×</button><h2 id="mt"></h2><p id="mx"></p></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- DATA ---------- */
+const TD=[["overzicht","OVERZICHT"],["tijdlijn","TIJDLIJN"],["bewijs","BEWIJS"],["verdachten","VERDACHTEN"],["puzzels","PUZZELS"],["notities","NOTITIES"],["conclusie","CONCLUSIE"]];
+const TP=[["overzicht","OVERZICHT"],["puzzels","PUZZELS"],["notities","NOTITIES"],["conclusie","RESULTAAT"]];
+const mkL=(code,paras,sig)=>`<div class="topline"><span>INKOMENDE CORRESPONDENTIE</span><span>CASE ${code}</span></div><div class="paperbox"><div class="stamp">POLITIE</div><div class="cls">█ VERTROUWELIJK — MAAR VOORAL LEUK █</div><h2>Beste onderzoeker,</h2>${paras.map(p=>`<p>${p}</p>`).join("")}<div class="sig">Rechercheafdeling<strong>${sig}</strong></div><div class="actions"><button class="btn p" onclick="go('brief')">JA — IK NEEM DE ZAAK AAN</button><button class="btn" onclick="leave()">TERUG</button></div></div>`;
+const mkB=(code,h,paras,warn,btn)=>`<div class="topline"><span>BRIEFING</span><span>INTERN / ${code}</span></div><div class="office"><div class="ic">🕵️</div><div class="role">Hoofdagent</div><h1>${h}</h1>${paras.map(p=>`<p>${p}</p>`).join("")}<div class="warn"><span>TIP</span><strong>${warn}</strong></div><button class="btn p" style="margin-top:26px" onclick="dash()">${btn||"START HET ONDERZOEK →"}</button></div>`;
+const CASES={},C055={},C042={},C071={},CESC={},CBR={};
+C055.SUS={
+gerrit:{n:"Gerrit Dekkers",r:"CAMPINGBAAS • 58",f:"👨🏻‍💼",d:"Na tien uur is het stil, daar staat hij voor. Zit krap bij kas en vermoedt dat iedereen iets voor hem verbergt.",
+q:[["Waar was u tijdens ronde 4?","“Achter de balie, met de microfoon. Ik riep B-7. Iedereen keek me aan alsof ze me iets wilden zeggen. Raar, hè?”"],["Hoe staat de camping ervoor?","“Prima. Op de energienota na. Maar dat is geen reden om mijn eigen jackpot te stelen. Ik heb mijn eigen bingo nog nooit beroofd.”"]]},
+truus:{n:"Truus van Rijn",r:"VASTE GAST • 71",f:"👵🏼",d:"Staat sinds 1979 op plek 14. Weet alles, zegt niks. Ze zegt het toch.",
+q:[["Wat zag u tijdens de bingo?","“Ik zeg niks, hoor. Over wat ik gezien heb. En ook niks over een sjaal. Wat voor sjaal? Geen sjaal.”"],["Wat weet u van Willem?","“Dat hij nooit iets hoort. Behalve als het over koffie gaat. Of over geld. Of over wat ik zeg.”"]]},
+bas:{n:"Bas Verhoeven",r:"ANIMATIE • 21",f:"🧑🏽‍🎤",d:"Verkoopt ijsjes en geeft kinderen schmink. Was ‘even weg’ rond 21:35 en heeft een verdacht grote doos bij zijn ijskast.",
+q:[["Waar was u tijdens ronde 4?","“Bij de ijsbalie. Of bij de wc. Of bij de ijsbalie. Wat is het juiste antwoord?”"],["Waarom was u weg?","“Kaarsjes! Voor de taart van de kleine Jochem. Hij werd… negenenvijftig. Ik bedoel: negen. Negen.”"]]},
+willem:{n:"Ome Willem Vermeulen",r:"BUURMAN • 74",f:"👴🏻",d:"Drie caravans, één hoed met veer. Zegt dat hij slecht hoort. Hoort alles als het over geld gaat.",
+q:[["Waar was u tijdens ronde 4?","“HOE LAAT?” … “Ah, bij mijn caravan. Daar ben ik altijd. Behalve als er koffie is.”"],["Wat denkt u van de diefstal?","“Dat is jammer. Ik hoor het pas nu. Mijn gehoorapparaat staat altijd uit na het eten. Behalve bij het woord koffie.”"]]}};
+C055.E=[
+["e1","📄","Aangifte","Aangifte Gerrit Dekkers, 21:49:\n\n“Gestolen: koekblik (Verkade, rond, met kruidnotenresten) met €2.750 bingo-jackpot. Dader onbekend, maar ik heb een vermoeden. Of eigenlijk meerdere. Of eigenlijk niemand. En iedereen kijkt raar. Misschien ben ík de dader.”\n\nOpmerking agent: “Meneer Gerrit gaf mij een gratis ijsje voor het formulier. Ik heb het aangenomen als bewijsmateriaal.”",0],
+["e2","🏢","Het kantoor","Kantoor achter de balie. Deur niet geforceerd, sleutel hangt aan de haak.\n\nOp de grond: een klein grijs veertje en een kruimel kruidnoot.\n\nHet blik stond op de vrieskist en is weg. Kruidnoten liggen nog op de bank. Naast de deur: een opgevouwen sjaal die niemand wil claimen.",0],
+["e3","💬","Verklaringen","GERRIT: “Ik was bij de microfoon, ik zag niets.”\nTRUUS: “Ik zeg niks. Maar het was iemand met een hoed.”\nBAS: “Ik stond bij de ijsjes. Echt waar.”\nWILLEM: “Wat zegt u? Ik hoor u niet!” (terwijl de agent fluisterde)\n\nOpmerkelijk: drie van de vier verdachten noemen spontaan ‘kaarsjes’, ‘sjaal’ of ‘koffie’. Niemand weet waarom.",0],
+["e4","🎲","Bingo-schema","Ronde 4: start 21:30.\nRonde 5: start 21:42.\n\nDe jackpot lag nog in het blik bij de start van ronde 4 (Gerrit zag het).","p1"],
+["e5","⚡","Energienota","Aanmaning Gerrit: €2.600 achterstallig.\n\nGerrit had dus een motief. Zijn jackpot is bijna precies zo groot als zijn schuld. Maar: hij beheert de jackpot al jaren zonder ooit te stelen.","p2"],
+["e6","🍦","Ijsjeskassa","Kassalog van de ijsbalie:\n21:31 ijsje\n21:36 ijsje\n21:41 ijsje\n\nVerkocht door Bas. Hij had dus geen tijd om een kantoor te leegroven. Wel om iets anders te verstoppen.","p3"],
+["e7","🔑","Sleutelmakersbon","Sleutelmaker Eindhoven, 14 juni:\n\n“1× kopie sleutel kantoor Camping De Zonnebloem. Klant: W. Vermeulen.”\n\nDe campingbaas zegt dat hij nooit een kopie heeft laten maken.","p4"],
+["e8","💶","Betaling staanplaats","Zaterdag betaalde Willem zijn achterstallige staanplaatsgeld voor drie caravans:\n\n55 biljetten van €50. Contant. In één keer.\n\nHij had eerder deze week gezegd dat hij “het pas na de zomer kon betalen”.","p5"],
+["e9","👵🏼","Verklaring Truus","Truus: “Ik zeg niks, maar om 21:36 liep iemand met een hoed met een veer langs het kantoor. Hij keek niet naar links. Hij keek niet naar rechts. Hij keek alsof hij precies wist waar hij heen moest. En nee, ik zeg ook niks over mijn sjaal.”","c_truus"],
+["e10","🎩","Bekentenis Willem","Willem (met gehoorapparaat aan): “Ik hoor prima. Maar het is handig als mensen denken van niet. Ik moest drie staanplaatsen betalen of ik moest weg. Ik wilde het blik terugleggen na de volgende bingo. Echt.”\n\n“En die kruidnoten? Dat was gewoon een kleine bonus.”","c_willem"],
+["e11","🎂","Het geheim van Bas","Bas: “Oké. Er is geen kleine Jochem. Die kaarsjes, 59 stuks, zijn voor Gerrit. Hij is morgen jarig. De hele camping organiseert een surprisefeest. Truus breide een sjaal, Willem zou koffie zetten, ik verstopte de taart bij de ijskast. Daarom deed iedereen zo raar. Maar we hebben niks met het blik te maken, echt niet.”","c_bas"]];
+C055.P=[
+{t:"Het tijdvenster",x:"Ronde 4 start: 21:30\nRonde 5 start: 21:42\n\nHoeveel minuten heeft de dief minimaal gehad?",a:/^(12|twaalf)( min.*)?$/,h:"21:42 min 21:30.",ok:"Twaalf minuten. Genoeg tijd voor een blik en een kruidnoot."},
+{t:"De energienota",x:"Gerrit heeft een energienota van €2.600 open.\nDe jackpot is €2.750.\n\nHoeveel euro is de jackpot méér dan de nota?",a:/^(€ ?)?150(,-)?$/,h:"2750 min 2600.",ok:"€150. Gerrit zit er opvallend dicht bij. Maar opvallend is niet bewezen."},
+{t:"Bas en zijn ijsjes",x:"Ijsjeskassa, door Bas:\n21:31, 21:36, 21:41\n\nKon Bas in dit venster van 12 minuten in het kantoor zijn? (ja/nee)",a:/^nee$/,h:"Hij verkocht om de 5 minuten een ijsje.",ok:"Nee. Hij verkocht om de paar minuten iets. Bas heeft een ijsje-alibi."},
+{t:"De sleutelmaker",x:"Bon sleutelmaker: ‘Klant: W. Vermeulen’\n\nBinnen de verdachten staat één naam die met W.V. begint.\n\nWie is dat?",a:/^(willem|ome willem|willem vermeulen)$/,h:"Zie de lijst van verdachten.",ok:"Ome Willem. De sleutel kwam al in juni in zijn zak."},
+{t:"De biljetten",x:"Willem betaalde €2.750 contant in biljetten van €50.\n\nHoeveel biljetten is dat?",a:/^(55|vijfenvijftig)$/,h:"2750 gedeeld door 50.",ok:"55 biljetten. Dat is precies de jackpot. Toeval bestaat, maar niet zo."}];
+C055.CF={
+"truus|e2":"“Een veertje! Zie je wel! Ik zei het: hoed met veer, 21:36. Ik zeg niks, maar het was Willem. En die sjaal is van mij.”|c_truus",
+"truus|e3":"“Ik zeg niks, maar ik heb alles gehoord.” Ze knipoogt.|c_truus",
+"truus|e11":"“Ik zei toch dat ik niks zei. Nu is de verrassing verpest.” Ze slaat haar sjaal om Bas heen.",
+"willem|e8":"Willem zet zijn gehoorapparaat aan. “Oké. Het kan geen kwaad meer. Ja.” Hij vertelt alles.|c_willem",
+"willem|e7":"“Wat zegt u? Een sleutel? Ik hoor u niet.” Zijn oor wordt lichtrood.",
+"willem|e2":"“Een veertje? Van mijn hoed? Dat… dat kan iedereen verloren hebben.” Hij kijkt naar zijn hoed.",
+"gerrit|e5":"“Dat is privé! Wie heeft dat gelezen?” Gerrit wordt rood. Maar hij heeft die bingo nog nooit eerder geroofd.",
+"gerrit|e4":"“Het blik lag er om 21:30 nog. Ik zag het met eigen ogen.” Hij is zichtbaar opgelucht.",
+"gerrit|e7":"“Een sleutelkopie op naam van Willem? ...Ja. Dat wist ik. Ik dacht dat het voor zijn caravan-wc was.” Hij kijkt schuldig naar zijn schoenen.",
+"gerrit|e11":"Gerrit leest het papier twee keer. “Een feest? Voor mij?” Hij moet even gaan zitten. “Dus daarom keek iedereen zo raar. Ik dacht dat ze me wilden ontslaan.”",
+"bas|e6":"“Zie je! Ik stond bij de ijsjes. En ik moet iets bekennen: die kaarsjes zijn voor Gerrit. Zijn verjaardag. Het is een surprisefeest.” Hij kijkt schuldig naar de ijskast.|c_bas",
+"bas|e2":"“Ik… ik weet niets van een veertje. Ik heb alleen een petje. En een taart.”"};
+C055.TL=[["21:30","Ronde 4","Bingo begint. Het blik ligt nog in het kantoor."],["21:35","Bas ‘even weg’","Hij komt na een paar minuten terug met een verdacht grote doos."],["21:36","Iemand met een hoed","Truus ziet iets. Of zegt dat ze iets ziet."],["21:38","Rond de ijskast","Truus en Bas stoppen verdacht abrupt met praten als Gerrit langskomt."],["21:42","Ronde 5","Gerrit gaat het blik pakken voor de prijs. Het blik is weg."],["21:49","Aangifte","Gerrit doet aangifte. Met ijsje."]];
+
+Object.assign(C055,{kind:"detective",icon:"🎲",title:"Dossier 055",sub:"De Verdwenen Jackpot",tabs:TD,L:"<div class=\"topline\"><span>INKOMENDE CORRESPONDENTIE</span><span>CASE 055</span></div>\n<div class=\"paperbox\"><div class=\"stamp\">POLITIE</div><div class=\"cls\">█ VERTROUWELIJK — OOK VOOR CAMPINGBEWONERS █</div>\n<h2>Beste onderzoeker,</h2>\n<p>Vrijdagavond om 21:42 kondigde bingo-presentator Gerrit de start van ronde 5 aan. Daarna ontdekte hij dat het <b>koekblik met de jackpot</b> uit het kantoor was verdwenen. Inhoud: <b>€2.750</b> in biljetten, plus een gezellig geurtje van kruidnoten.</p>\n<p>Camping <b>De Zonnebloem</b> telt 212 staanplaatsen, 1 zwembad, 3 vlaggen en 4 verdachten. Er is geen braak. Er is wel een spoor van gerinkel, gefluister en één heel klein veertje.</p><p>Alle vier de verdachten doen alsof ze een geheim hebben. Dat hebben ze ook. Alleen niet allemaal hetzelfde geheim.</p>\n<p><strong style=\"color:#ddd1c0\">Wij hebben iemand nodig die niet alleen luistert, maar ook hoort wat er niet wordt gezegd. Of wat er heel hard níet wordt gezegd.</strong></p>\n<div class=\"sig\">Rechercheafdeling Brabant<strong>Hoofdagent D. Willems</strong></div>\n<div class=\"actions\"><button class=\"btn p\" onclick=\"go('brief')\">JA — IK NEEM DE ZAAK AAN</button></div></div>",B:"<div class=\"topline\"><span>RECHERCHEAFDELING</span><span>INTERN / 055</span></div>\n<div class=\"office\"><div class=\"ic\">🕵️</div><div class=\"role\">Hoofdagent</div><h1>Dit keer geen kroket, maar een koekblik.</h1>\n<p>Willems. Ik zat tijdens de bingo op rij 3 met een kaart die niets opleverde. Net voor het blik verdween, riep iemand “B-7” en iedereen keek omhoog. Toen keek niemand naar het kantoor. Slim, wie het ook was. Ook raar: iedereen die ik ondervraagde, begon over kaarsjes, sjaals of koffie. Ik heb geen idee waarom.</p>\n<p>Vier verdachten: <b>Gerrit</b> (campingbaas), <b>Truus</b> (vaste gast sinds 1979), <b>Bas</b> (animatie en ijsjes) en <b>Ome Willem</b> (drie caravans, één Tiroler hoed).</p>\n<div class=\"warn\"><span>WAARSCHUWING</span><strong>Na 22:00 is het stil op de camping. Dat betekent dat getuigen nu nog wakker zijn.</strong></div>\n<button class=\"btn p\" style=\"margin-top:26px\" onclick=\"dash()\">START HET ONDERZOEK →</button></div>",
+ov:"<p>Vrijdagavond, bingo op Camping De Zonnebloem. Tijdens ronde 4 verdween het koekblik met de jackpot van €2.750 uit het kantoor. Geen braak. Wel een veertje, een kruimel kruidnoot en vier mensen met een verhaal.</p><p class=\"red\">Eén van hen loog over meer dan alleen de tijd.</p>",
+task:"<p><b>Wie</b> nam de jackpot?</p><p><b>Hoe</b> kwam hij het kantoor in?</p><p><b>Waarom</b> deed hij het?</p><p class=\"gold\">Een verdachte is nog geen dader.</p>",
+tlnote:"Het venster is klein. Kijk vooral wie er níét in zijn eigen verhaal past.",
+accuse:{q:"Wie nam de jackpot, en hoe bewijs je het?",culprit:"willem",proof:"c",proofs:[["a","Gerrit zit krap bij kas"],["b","Bas was ‘even weg’ rond 21:35"],["c","Een veertje op de plek, een sleutelkopie op naam van de verdachte en 55 biljetten van €50"],["d","Truus roddelt altijd"]],
+wrong:{gerrit:"Gerrit had een motief, maar het blik was weg terwijl hij op het podium stond. Hij beheert de jackpot al jaren zonder te stelen.",truus:"Truus zegt veel, maar ze zag het alleen. Ze deed het niet.",bas:"Bas had een alibi: hij stond om 21:31, 21:36 en 21:41 ijsjes te verkopen."},epi:"<p><b>Ome Willem</b> hoorde prima. Hij liet in juni een kopie maken van de kantoorsleutel, want hij kon zijn drie staanplaatsen niet betalen. Tijdens ronde 4, toen heel Zonnebloem naar het scherm keek, liep hij om 21:36 met zijn Tiroler hoed langs het kantoor, pakte het koekblik, liet daarbij een veertje en één kruidnoot vallen en ging terug naar zijn caravan.</p>\n<div class=\"dlg cf\"><b>🎭 PLOTTWIST 1 — Iedereen loog, maar over een taart.</b><br>De hele camping organiseerde een surprisefeest voor Gerrits 59e verjaardag. Bas verstopte de taart, Truus breide een sjaal en ‘zei niks’, en Willem zou koffie zetten. Ze deden verdacht omdat ze verdacht móesten doen. Alleen Willems leugen was echt.</div>\n<div class=\"dlg cf\"><b>🎭 PLOTTWIST 2 — Gerrit wist het.</b><br>Gerrit zag in juni dat Willem een sleutelkopie had en zei niets: “Ik dacht dat het voor zijn caravan-wc was.” Hij liet de deur zelfs op de haak hangen. Hij is te aardig om boos te zijn, en te bang om te vragen.</div>\n<div class=\"dlg cf\"><b>🎭 PLOTTWIST 3 — De jackpot ging naar de goede bestemming.</b><br>Willem betaalde zijn staanplaatsen met precies 55 biljetten van €50. Gerrit gaf dat geld maandag aan de energieleverancier. Netto: Gerrits schuld is weg, Willems schuld is weg, €150 ging naar kruidnoten en niemand heeft iets verloren. Behalve de bingospelers, die moeten de jackpot opnieuw bij elkaar bingoën.</div>\n<p style=\"color:var(--gold)\">Gerrit blies 59 kaarsjes uit en riep B-7. Niemand weet waarom. Willem zette koffie. Truus brei de sjaal af. Bas kreeg een gratis ijsje en een waarschuwing.</p>"}});
+
+C042.SUS={
+kees:{n:"Kees de Groot",r:"VOORZITTER",f:"🧓🏼",d:"Zegt “volgens de statuten” vaker dan “goedemorgen”. Verliet het podium tijdens de storing.",
+q:[["Waar was u tijdens de storing?","“Ik… eh… controleerde de stoppenkast. Volgens de statuten is dat een voorzittersverantwoordelijkheid. Of nee, van de klusploeg. Maar die was er niet.”"],["Wie kent de kluiscode?","“Alleen het bestuur. Dus ik. En Joop. En eh… iedereen die op de achterkant van het jaarverslag heeft gekeken.”"]]},
+joop:{n:"Joop Smits",r:"PENNINGMEESTER",f:"🧔🏽",d:"Heeft altijd iets in zijn hand. Meestal een bamischijf. Beheert de clubkas.",
+q:[["Waar was u tijdens de storing?","“Ik zat achterin. Met een bamischijf. Dat is geen misdaad, hè?”"],["Hoe staat de clubkas ervoor?","“Prima! Gezond! Een beetje krap! Maar dat komt door de inflatie.”"]]},
+marga:{n:"Marga Peeters",r:"RAGOUTKONINGIN",f:"👩🏼‍🍳",d:"Won net het kampioenschap. Haar geheime recept zou in de kluis hebben gelegen.",
+q:[["Waar was u tijdens de storing?","“Bij de frituur, waar anders? Ik sta er al dertig jaar. Ik zie in het donker beter dan Kees bij daglicht.”"],["Is uw recept echt gestolen?","“Welk recept? ...Ik bedoel: hoe weet u dat het in de kluis lag?”"]]},
+rob:{n:"Rob Hendriks",r:"SPONSOR • ROB’S ROLLUIKEN",f:"🕶️",d:"Deelde flyers uit tijdens de finale. Zegt dat hij de bokaal nooit heeft aangeraakt.",
+q:[["Waar was u tijdens de storing?","“Bij de bar, flyers aan het uitdelen. Wilt u ook een rolluik? Gratis opmeten.”"],["Waarom was u hier eigenlijk?","“Sponsor. Netwerken. En… eh… een aankoop. Maar dat is privé.”"]]}};
+C042.E=[
+["e1","📄","Aangifte","Aangifte door voorzitter Kees de Groot, 21:31:\n\n“Gestolen: De Gouden Kroket (vergulde bokaal, 2,4 kg) en een envelop met geheim ragoutrecept. Dader onbekend. Ik wil dat wel gezegd hebben: dit is volgens de statuten een ernstig feit.”\n\nOpmerking agent: “Meneer Kees vroeg of hij een kopie van zijn aangifte mocht. Voor de notulen.”",0],
+["e2","🔐","De kluis","Digitaal cijferslot in de keuken van het buurthuis. Geen braaksporen, geen krassen. De deur staat open.\n\nBinnen: een lege plank, een rolletje drop en een servetje van snackbar De Hoek.\n\nDe kluis is dus netjes geopend met de juiste code. Wie het ook deed, hij wist hoe het moest.",0],
+["e3","💬","Verklaringen","KEES: “Joop heeft de kluis niet aangeraakt. Dat weet ik zeker. Hij zat achterin.”\nJOOP: “Kees was de hele tijd bij mij. Of nee, bij het podium. Of nee, bij mij. Ik had een bamischijf.”\nMARGA: “Ik ben de enige die hier iets te verliezen had.”\nROB: “Ik was overal en nergens. Netwerken, dat is mijn vak.”\n\nTwee verklaringen zijn onmogelijk allebei waar.",0],
+["e4","⚡","Stoppenkast","Het log van het stoppenkastje:\n\nGroep 3 (frituur) valt uit door overbelasting: 21:14.\nHersteld met de hand: 21:19.\n\nDe frituurpan was die avond dubbel aangesloten op één groep. Dat is de reden voor de storing, geen sabotage.","p1"],
+["e5","🔑","Kluislog","Het cijferslot logt elke opening:\n\n21:16 — GEOPEND met sleutelpas nr. 2\n21:16 — Gesloten niet; deur blijft open.\n\nDe pas is persoonlijk. De code was dus niet het enige wat de dief nodig had.","p2"],
+["e6","📺","Livestream finale","De livestream draaide op een telefoon met accu en bleef aan tijdens de storing.\n\n21:12 Kees en Marga op het podium.\n21:14 Licht uit. Rob staat bij de bar.\n21:15 Kees verlaat het beeld, richting stoppenkast.\n21:19 Licht aan. Kees terug op het podium.\n\nJoop staat niet in beeld. Wel hoor je op de achtergrond iets knisperen.","p3"],
+["e7","🧾","Bankafschrift clubkas","Afschrijvingen clubkas, afgelopen drie maanden:\n\n38 pinbetalingen, snackbar De Hoek, steeds €30,-\nOmschrijving bij pinpas: ‘Vergaderkosten’.\n\nPenningmeester: Joop Smits.","p4"],
+["e8","🛒","Marktplaats-advertentie","“Mooie vergulde kroketbokaal, prima staat, 2,4 kg, geen ruilen. €250, ophalen Eindhoven, 06-48510220.”\n\nGeplaatst 25 september, verkocht 27 september.","p5"],
+["e9","🧾","Bonnetje van Rob","Rob Hendriks heeft de bokaal gekocht.\n\n“Ik dacht dat het een los bokaaltje was voor mijn showroom. Contant €250, van een man met een bamischijf in zijn jaszak. Ik wist niet dat het de wisselbokaal was. Ik heb hem zelfs nog laten graveren: ‘Rob’s Rolluiken, kampioen’.”","c_rob"],
+["e10","📝","Het recept","Marga: “Dat envelopje had ik meegenomen als afleiding. Het recept zit in mijn hoofd. Niemand krijgt dat. Ik wilde alleen weten wie er in de kluis keek. Dat is toch normaal?”\n\n(Eerder had ze gezegd dat het in de kluis lag. Het was dus een list.)","c_marga"]];
+C042.P=[
+{t:"De storing",x:"Stoppenkast, groep 3 (frituur)\nUitgevallen: 21:14\nHersteld: 21:19\n\nHoeveel minuten was het donker?",a:/^(5|vijf)( min.*)?$/,h:"21:19 min 21:14.",ok:"Vijf minuten. Dat is lang genoeg om een kluis te openen en kort genoeg om een kroket te laten afkoelen."},
+{t:"De kluiscode",x:"Op een briefje aan de kluis (let op: dit hoort daar niet):\n“Code = oprichtingsjaar van ’t Gouden Hoekje.”\n\nOp het bord in de gang: ‘Sinds 1987’.\n\nWelke code opent de kluis?",a:/^1987$/,h:"Zie het bord.",ok:"1987. De kluis kon dus elk bestuurslid openen. Of iedereen die het briefje las."},
+{t:"Wie liep weg?",x:"Livestream:\n21:12 Kees en Marga op het podium\n21:14 licht uit, Rob bij de bar\n21:15 een van hen verlaat het beeld\n21:19 licht aan, Kees weer op het podium\n\nWie verliet het podium tijdens de storing?",a:/^kees( de groot)?$/,h:"Kees ging naar de stoppenkast.",ok:"Kees. Maar het stoppenkastje had hij niet nodig om de kluis open te maken."},
+{t:"Het afschrift",x:"38 pinbetalingen bij snackbar De Hoek\nElke betaling: €30\n\nWat is het totaal in euro?",a:/^(€ ?)?1\.?140(,-)?$/,h:"38 × 30.",ok:"€1.140. Dat is een hele hoop frikandellen voor het buurtbelang."},
+{t:"Het nummer",x:"De advertentie noemt het nummer 06-48510220.\n\nContactenlijst buurthuis:\nKees: 06-48120553\nJoop: 06-48510220\nMarga: 06-31077740\nRob: 06-22119008\n\nVan wie is het nummer?",a:/^joop( smits)?$/,h:"Vergelijk de cijfers één voor één.",ok:"Het nummer van Joop. De bokaal stond al een week te koop."},
+{t:"Wanneer verkocht?",x:"Advertentie: verkocht 27 september\nFinale: 4 oktober\n\nHoeveel dagen vóór de finale was de bokaal al weg?",a:/^(7|zeven)( dag.*)?$/,h:"4 oktober min 27 september.",ok:"Zeven dagen. De bokaal werd dus niet tijdens de storing gestolen: er lag al een week niets in de kluis."},
+{t:"De pas",x:"Pasuitgifte sleutelpassen kluis:\nPas 1: Kees (voorzitter)\nPas 2: Joop (penningmeester)\nPas 3: reserve, in het kantoor\nPas 4: gast\n\nHet slot werd om 21:16 geopend met pas nr. 2.\nWiens pas?",a:/^joop( smits)?$/,h:"Zie nr. 2.",ok:"De pas van Joop. Hij wilde de diefstal laten lijken op iets wat gebeurd is tijdens de storing."}];
+C042.CF={"marga|e2":"“Ik zag dat iemand in de kluis keek. Toen ik terugkwam bleek hij leeg. Ik zei dat mijn recept erin lag, anders had niemand opgelet.”|c_marga","marga|e1":"“Dat recept zit in mijn hoofd. Ik zei niets.” Ze lacht fijntjes.|c_marga","rob|e8":"Rob wordt bleek. “Dat nummer… dat is… oké, ik heb hem gekocht. Maar ik wist niet dat het de wisselbokaal was.”|c_rob","joop|e4":"“De stoppenkast? Dat was Kees.” Hij eet iets.","joop|e7":"“Vergaderkosten! Wat is vergaderen zonder frikandel?” Hij zweet licht.","joop|e5":"Joop stopt met kauwen. “Pas 2? Eh… pas 2 kan iedereen hebben gepakt.” Er is niemand die dat gelooft.","kees|e3":"“Dat staat los van de statuten.” Hij kijkt benauwd.","kees|e6":"“Ik ben maar kort weggeweest, voor het algemeen belang.”","rob|e5":"“Sleutelpas? Ik heb alleen flyers.”"};
+C042.TL=[["20:30","De finale begint","140 bezoekers, 12 krokettenmakers en één jury met heel veel mening."],["21:00","Marga wint","Haar ragout wint voor het derde jaar op rij. Er wordt gemord."],["21:12","Podium","Kees begint zijn speech. Rob deelt flyers."],["21:14","Frituurgroep valt uit","De zaal is donker. Vijf minuten."],["21:19","Licht aan","Iedereen kijkt naar iedereen."],["21:20","“De kluis is leeg!”","Kees roept het door de microfoon. Het zit er nog even te echoën."]];
+
+Object.assign(C042,{kind:"detective",icon:"🥟",title:"Dossier 042",sub:"De Gouden Kroket",tabs:TD,L:"\n<div class=\"topline\"><span>INKOMENDE CORRESPONDENTIE</span><span>CASE 042</span></div>\n<div class=\"paperbox\"><div class=\"stamp\">POLITIE</div>\n<div class=\"cls\">█ VERTROUWELIJK — OOK VOOR BUURTHUIZEN █</div>\n<h2>Beste onderzoeker,</h2>\n<p>Vrijdagavond om 21:20 riep voorzitter <b>Kees</b> van buurthuis ’t Gouden Hoekje door de microfoon: “De kluis is leeg!” Op dat moment waren er 140 bezoekers en één frituurpan die de stroom had laten uitvallen.</p>\n<p>Gestolen: <b>De Gouden Kroket</b>, de wisselbokaal van het Open Eindhovens Kroketkampioenschap, en het <b>geheime ragoutrecept</b> van de winnares. Waarde: onbetaalbaar. Verzekerde waarde: €250.</p>\n<p>Er zijn geen braaksporen. Er is een stroomstoring van vijf minuten. En er zijn vier mensen die elkaar volop beschuldigen.</p>\n<p><strong style=\"color:#ddd1c0\">Wij hebben iemand nodig die kan rekenen, kan luisteren en tegen een bamischijf kan.</strong></p>\n<div class=\"sig\">Rechercheafdeling Eindhoven<strong>Hoofdagent D. Willems</strong></div>\n<div class=\"actions\"><button class=\"btn p\" onclick=\"go('brief')\">JA — IK NEEM DE ZAAK AAN</button><button class=\"btn\" onclick=\"go('home')\">TERUG</button></div>\n</div>",B:"<div class=\"topline\"><span>RECHERCHEAFDELING</span><span>INTERN / 042</span></div>\n<div class=\"office\"><div class=\"ic\">🕵️</div><div class=\"role\">Hoofdagent</div>\n<h1>Dit is een serieuze zaak. Min of meer.</h1>\n<p>Willems. Ik was er zelf bij, ik zat in het publiek met een kroket. Toen ging het licht uit. Toen ging het licht weer aan. Toen was de bokaal weg en mijn kroket ook, maar dat laatste is mijn eigen probleem.</p>\n<p>Vier verdachten: <b>Kees</b> (voorzitter), <b>Joop</b> (penningmeester), <b>Marga</b> (de winnares) en <b>Rob</b> (hoofdsponsor, Rob’s Rolluiken).</p>\n<p>Ze zeggen alle vier dat ze niets hebben gezien. Eén van hen liegt. Ik denk dat het er meer zijn.</p>\n<div class=\"warn\"><span>WAARSCHUWING</span><strong>Als iemand zegt “volgens de statuten”: niet luisteren.</strong></div>\n<button class=\"btn p\" style=\"margin-top:28px\" onclick=\"dash()\">START HET ONDERZOEK →</button></div>",
+ov:"<p>Vrijdagavond, finale van het Open Eindhovens Kroketkampioenschap in buurthuis ’t Gouden Hoekje. Om 21:14 viel de stroom uit. Om 21:20 riep voorzitter Kees dat de kluis leeg was.</p><p>Weg: de Gouden Kroket (wisselbokaal) en een envelop met het geheime ragoutrecept van winnares Marga.</p><p class=\"red\">Eén van hen weet precies wat er is gebeurd.</p>",
+task:"<p><b>Wie</b> deed het?</p><p><b>Hoe</b> kwam hij in de kluis?</p><p><b>Waarom</b> deed hij het?</p><p class=\"gold\">Soms is het gewoon Kees.</p>",
+tlnote:"Het draait om de vijf minuten tussen 21:14 en 21:19. En om wat er voor 21:14 al weg was.",
+accuse:{q:"Wie stal de Gouden Kroket, en hoe bewijs je het?",culprit:"joop",proof:"c",proofs:[["a","Marga won en kent het recept"],["b","Kees verliet het podium tijdens de storing"],["c","Joop’s pas opende de kluis, zijn nummer staat op de advertentie en de bokaal was al een week verkocht"],["d","Rob heeft de bokaal in zijn showroom"]],
+wrong:{kees:"Kees liep weg, ja. Naar de stoppenkast. Hij is niet de dader, hij is gewoon Kees.",marga:"Marga loog over haar recept, maar dat was een list. Ze had geen reden om haar eigen bokaal te stelen.",rob:"Rob kocht de bokaal in goed vertrouwen. Hij is slachtoffer van zijn eigen showroom."},
+epi:"<p><b>Joop Smits</b>, penningmeester, had in drie maanden €1.140 uit de clubkas aan frikandellen besteed. Om het kasonderzoek te overleven verkocht hij op 27 september de Gouden Kroket aan Rob voor €250 en liet hij tijdens de finale de zaal in het donker zetten: hij opende de kluis met pas 2 en liet de deur openstaan.</p><p>Kees verdacht niemand, behalve Kees. Marga loog over het recept om te zien wie in de kluis keek. Rob heeft nog altijd een bokaal met zijn eigen naam erop.</p><p style=\"color:var(--gold)\">Joop is aangehouden. Zijn bamischijf is in beslag genomen. De politie heeft hem gegeten.</p>"}});
+Object.assign(C071,{kind:"detective",icon:"🧦",title:"Dossier 071",sub:"De Verdwenen Rode Sok",tabs:TD,
+L:mkL("071",["Vrijdagmiddag, wasserette <b>De Schone Schijn</b>. In een glazen kastje hing sinds 1986 <b>de Rode Sok</b>: de mascotte van de buurt, achtergelaten in droger 4 en nooit opgehaald.","Tussen 14:00 en 15:30 verdween de sok. Het kastje is niet geforceerd. De eigenares heeft aangifte gedaan en 10% korting uitgeloofd voor de goede vinder.","<strong style=\"color:#ddd1c0\">Dit is geen moord. Dit is veel erger: het gaat om een sok.</strong>"],"Hoofdagent D. Willems"),
+B:mkB("071","Een sok. Echt waar.",["Willems. Ik was hier om mijn was te doen. Ik wil dat dat even duidelijk is.","Vier mensen waren in de zaak: <b>Mevrouw Bloem</b> (eigenares), <b>Dirk</b> (student, draagt toevallig één rode sok), <b>Fatima</b> (buurvrouw met drie wasmanden en een baby) en <b>Sander</b> (monteur, ‘kijkt nooit naar sokken’)."],"Niet elke rode sok is de Rode Sok."),
+ov:"<p>De Schone Schijn, Eindhoven. De Rode Sok hing er sinds 1986 in een kastje. Nu is het kastje leeg en het is akelig stil in de wasserette.</p><p class=\"red\">Eén van de vier weet meer dan hij zegt.</p>",
+task:"<p><b>Wie</b> nam de sok?</p><p><b>Hoe</b> kwam hij erbij?</p><p><b>Waarom</b>?</p><p class=\"gold\">Het is een zachte zaak. Maar ook hier telt bewijs.</p>",
+tlnote:"Rond 14:10 komt de monteur. Wat is er tussen 14:00 en 15:30 gebeurd?",
+SUS:{bloem:{n:"Mevrouw Bloem",r:"EIGENARES • 63",f:"👵🏻",d:"Runt de wasserette veertig jaar. Alles heeft een plek, behalve die ene sok.",q:[["Wat is de Rode Sok?","“Een sok die in 1986 achterbleef in droger 4. Niemand kwam hem halen. Sindsdien is hij onze mascotte. Hij heeft meer fans dan ik.”"],["Wie kent de kastjescode?","“Alleen ik en de monteur. En de poetshulp, maar die is op vakantie in Turkije.”"]]},
+dirk:{n:"Dirk Jansen",r:"STUDENT • 22",f:"🧑🏼‍🎓",d:"Wast elke donderdag. Draagt vandaag één rode sok. Heel verdacht.",q:[["Waarom draagt u een rode sok?","“Omdat de andere in de droger zit! Dit is gewoon mijn sok. Maat 43, merk Hema.”"],["Waar was u om 15:00?","“Bij droger 2, bang dat mijn overhemd krimpt. Het is een nieuw overhemd.”"]]},
+fatima:{n:"Fatima el Idrissi",r:"BUURVROUW • 41",f:"👩🏽",d:"Heeft vijf kinderen en dus meer sokken dan het museum. Ziet alles.",q:[["Wat zag u om 15:00?","“Niks. Wel een man met een tasje. Dat is niet verdacht. Maar het tasje bewoog… niet. Het was gewoon een tasje.”"],["Wie was er in de zaak?","“Mevrouw Bloem, Dirk, de monteur… en ik, met drie wasmanden en een baby op mijn heup.”"]]},
+sander:{n:"Sander Klaassen",r:"MONTEUR • 38",f:"🧑🏻‍🔧",d:"Repareerde droger 3. Zegt dat hij alleen naar machines kijkt.",q:[["Wat deed u hier?","“Droger 3 repareren. Pure techniek. Geen sokken. Echt niet.”"],["Weet u iets van het museum?","“Het museum? Ik ken het alleen van de buitenkant. Wie kijkt er nou naar sokken?”"]]}},
+E:[["e1","📄","Aangifte","Aangifte Mevrouw Bloem:\n\n“De Rode Sok (maat 36, gevonden 12 mei 1986) is uit het museumkastje verdwenen tussen 14:00 en 15:30. Het kastje is niet geforceerd. Wie hem terugbrengt, krijgt 10% korting op zijn volgende wasbeurt.”",0],
+["e2","🧦","Het museumkastje","Glazen kastje aan de muur. Plaquette: ‘De Rode Sok — sinds 1986’. Slot met cijfercode. Binnenin een leeg kussentje en een briefje.\n\nOp het glas: een kleine, zachte vingerafdruk.",0],
+["e3","💬","Verklaringen","BLOEM: “Ik was achter de balie.”\nDIRK: “Ik zat bij droger 2.”\nFATIMA: “Ik had mijn handen vol.”\nSANDER: “Ik keek alleen naar techniek.”\n\nOpmerkelijk: iedereen heeft het spontaan over sokken.",0],
+["e4","🔧","Servicebon","Servicebon monteur S. Klaassen, droger 3.\nAankomst 14:10, vertrek 15:40. Getekend om 15:40, met een klein tekeningetje van een sok.","p3"],
+["e5","🔢","Slotcode","Het kastje opent met 1986. Het jaar staat op de plaquette en is alleen bekend bij de eigenares en de monteur, die het kastje weleens controleren.","p1"],
+["e6","📏","Maatbriefje","Label in het kastje: ‘Rode Sok, maat 36’. Dirks sok is maat 43. De Rode Sok is dus niet Dirks sok.","p2"],
+["e7","🎒","Schoolbrief","Brief van basisschool De Regenboog aan ouders van groep 5:\n\n“Voor het Museum van de Buurt mag elk kind één bijzonder voorwerp meenemen. Lotte Klaassen heeft nog niets.”","p4"],
+["e8","👩🏽","Verklaring Fatima","Fatima: “Ik zag Sander met een AH-tasje naar buiten lopen, rond 15:35. Er stak iets roods uit. Ik dacht aan een sjaal. Het was een sok.”","c_fatima"],
+["e9","🧦","Bekentenis Sander","Sander: “Lotte had niets voor het museum. Ik dacht: ik leen hem voor één dag. Hij ligt onder mijn bank. Ik breng hem morgen terug, ik zweer het.”","c_sander"]],
+P:[{t:"De slotcode",x:"Op de plaquette: ‘De Rode Sok — sinds 1986’.\nDe code van het kastje is het jaar van de plaquette.\n\nWelke code?",a:/^1986$/,h:"Het staat op de plaquette.",ok:"1986. Het kastje is netjes geopend, niet geforceerd."},
+{t:"De maat",x:"Label in het kastje: ‘Maat 36’.\nDirk draagt maat 43.\n\nWelke maat heeft de Rode Sok?",a:/^36$/,h:"Het staat op het label.",ok:"Maat 36. Dirks sok is veel te groot."},
+{t:"De monteur",x:"Sander kwam om 14:10 en vertrok om 15:40.\n\nHoeveel minuten was hij in de wasserette?",a:/^(90|negentig)( min.*)?$/,h:"Anderhalf uur.",ok:"90 minuten. Lang voor één droger."},
+{t:"De schoolbrief",x:"Brief: ‘Lotte Klaassen, groep 5, heeft nog niets voor het Museum van de Buurt.’\n\nWie van de verdachten is haar vader?",a:/^(sander|sander klaassen)$/,h:"Zelfde achternaam.",ok:"Sander Klaassen. Een vader met een missie."}],
+CF:{"fatima|e2":"“Een tasje! Een AH-tasje met iets roods erin. Ik dacht dat het een sjaal was.” Ze vertelt wat ze zag.|c_fatima","sander|e7":"Sander kijkt naar de brief. “Dat is zo’n rotbrief.” Hij begint te lachen en vertelt alles.|c_sander","dirk|e6":"“Ik zei toch maat 43! Dit is gewoon mijn sok!”","bloem|e5":"“Alleen ik en de monteur kennen de code. Dan weet je het wel.”","sander|e4":"“Ik ben gewoon gewetensvol.” Hij zweet licht."},
+TL:[["14:00","Laatst gezien","Mevrouw Bloem poetst het kastje, de sok hangt er nog."],["14:10","Monteur komt","Sander begint aan droger 3."],["15:00","Dirk bij droger 2","Zijn overhemd is nog niet gekrompen."],["15:30","Ontdekking","Het kastje is leeg."],["15:40","Monteur weg","Sander tekent de servicebon."]],
+accuse:{q:"Wie nam de Rode Sok, en hoe bewijs je het?",culprit:"sander",proof:"c",proofs:[["a","Dirk draagt een rode sok"],["b","Mevrouw Bloem heeft de meeste verhalen"],["c","Maat 36 sluit Dirk uit, alleen de monteur kende de code, hij was 90 minuten aanwezig en zijn dochter had een schoolopdracht"],["d","Fatima heeft veel sokken"]],
+wrong:{dirk:"Zijn sok is maat 43. De Rode Sok is maat 36.",bloem:"Mevrouw Bloem zou nooit haar eigen mascotte stelen.",fatima:"Fatima zag het alleen. Ze had haar handen vol met kinderen."},
+epi:"<p><b>Sander</b> leende de Rode Sok voor het Museum van de Buurt van zijn dochter Lotte. Lotte kreeg een negen. De sok hangt weer in zijn kastje, met een briefje: ‘Dank voor het lenen.’</p><p>Mevrouw Bloem eiste excuses én 10% korting en kreeg allebei. Dirk heeft zijn overhemd gered. Fatima’s tasje bevatte alleen boodschappen.</p><p style=\"color:var(--gold)\">De sok kreeg een eigen plek op de website van de school. Hij heeft nu twee fanclubs.</p>"}});
+Object.assign(CESC,{kind:"puzzle",icon:"🏚️",title:"Escape: Oma Bep",sub:"De Zolder van Oma Bep",tabs:TP,
+L:mkL("E-01",["Oma Bep heeft je ‘even’ op zolder gezet omdat ze een puzzelavond wil. Er zijn koekjes. Er is een luik. Er is geen sleutel.","Los de zes puzzels op en je vindt de code van het luik."],"Oma Bep"),
+B:mkB("E-01","Het luik zit op slot.",["Oma Bep roept van beneden: ‘Als je klaar bent, krijg je een koekje!’","Elke puzzel hoort bij iets op zolder: een blik, een sjaal, een kaart, drie schilderijen, een foto en een luik."],"Puzzel 6 gebruikt de antwoorden van de eerdere puzzels.","START DE ESCAPE →"),
+ov:"<p>De zolder ruikt naar mottenballen en koekjes. Oma Bep heeft zes puzzels verstopt. Wie ze oplost, mag naar beneden.</p>",task:"<p>Los alle 6 puzzels op. Het laatste antwoord is de code van het luik.</p><p class=\"gold\">Hints tellen mee voor je rang.</p>",
+P:[{t:"Het koekblik",x:"In het blik zaten 24 koekjes. Oma at eerst een derde, daarna nog 4.\n\nHoeveel koekjes zijn er over?",a:/^12$/,h:"24 ÷ 3 = 8 gegeten, dan 4 erbij.",ok:"12. Oma heeft dus eerder zin in koekjes dan in puzzels."},
+{t:"De sjaal",x:"Op de sjaal staat een briefje: <b>KRXWMH</b>.\n\n‘Caesar, drie stappen terug.’ Welk woord?",a:/^houtje$/,h:"K wordt H.",ok:"HOUTJE. Onder het houtje ligt niets, maar het voelt goed."},
+{t:"De landkaart",x:"Ik heb steden maar geen huizen, bossen maar geen bomen, water maar geen vissen.\n\nWat ben ik?",a:/kaart/,h:"Je hangt me op de muur.",ok:"Een landkaart. Waar Oma haar plek op markeert."},
+{t:"Drie schilderijen",x:"Drie schilderijen: rood, blauw, groen.\nRood hangt direct links van blauw.\nGroen hangt helemaal rechts.\n\nWelke kleur hangt in het midden?",a:/^blauw$/,h:"Volgorde van links naar rechts: rood, ?, groen.",ok:"Blauw. In het midden, zoals Oma het wil."},
+{t:"De leeftijd",x:"Oma is nu 3 keer zo oud als jij. Over 12 jaar is ze 2 keer zo oud.\n\nHoe oud ben jij nu?",a:/^(12|twaalf)( jaar)?$/,h:"3x + 12 = 2(x + 12).",ok:"12 jaar. Oma is 36. Het is een jonge oma."},
+{t:"Het luik",x:"De code van het luik is het antwoord van puzzel 1 en het antwoord van puzzel 5, achter elkaar.\n\nWelke code?",a:/^1212$/,h:"12 en 12.",ok:"1212. Het luik klikt open."}],
+accuse:{epi:"<p>Het luik klikt open. Beneden staat Oma Bep met een schaal koekjes. ‘Dat ging sneller dan bij je opa,’ zegt ze.</p><p style=\"color:var(--gold)\">Opa zit nog steeds op zolder. Hij zit vast op puzzel 4.</p>"}});
+Object.assign(CBR,{kind:"puzzle",icon:"🧠",title:"Breinbreker Battle",sub:"Acht snelle breinbrekers",tabs:TP,
+L:mkL("B-01",["Welkom bij de Breinbreker Battle! Geen moord, geen verdachten, alleen acht korte puzzels en een klok.","Wie ze het snelst oplost, wint de eeuwige roem en een symbolisch koekje."],"De Spelleider"),
+B:mkB("B-01","Acht puzzels. Geen verhaal.",["De puzzels zijn kort en vriendelijk. Wie vastloopt: gebruik een hint, die kost je alleen rangpunten.","Succes, en niet overdenken."],"Het simpele antwoord is vaak het goede.","START DE BATTLE →"),
+ov:"<p>Acht snelle puzzels: reeksen, rekenen, woordgrappen en een gemene trick question.</p>",task:"<p>Los alle 8 puzzels op, zo snel mogelijk.</p>",
+P:[{t:"De reeks",x:"2, 4, 8, 16, ?\n\nWat komt er hierna?",a:/^32$/,h:"Elke keer maal 2.",ok:"32."},
+{t:"Zwaar of licht",x:"Wat is zwaarder: 1 kg veren of 1 kg stenen?",a:/gelijk|evenveel|even zwaar|allebei|hetzelfde/,h:"Beide wegen 1 kg.",ok:"Gelijk. 1 kilo is 1 kilo."},
+{t:"Vier poten",x:"Ik heb vier poten maar ik loop niet. Je zit of eet aan mij.\n\nWat ben ik?",a:/tafel|stoel|bank|bed|kast/,h:"Staat in je woonkamer.",ok:"Een tafel, een stoel… elk meubelstuk dat meedoet."},
+{t:"Bat en bal",x:"Een bat en een bal kosten samen €1,10. De bat kost €1,00 meer dan de bal.\n\nHoeveel cent kost de bal?",a:/^(5|vijf)( cent)?$/,h:"Het is niet 10.",ok:"5 cent. De bat is €1,05."},
+{t:"28 dagen",x:"Hoeveel maanden hebben 28 dagen?",a:/^(12|twaalf)$/,h:"Alle maanden hebben minstens 28.",ok:"12. Ze hebben er allemaal minstens 28."},
+{t:"Fibonacci",x:"1, 1, 2, 3, 5, 8, ?",a:/^13$/,h:"Tel de laatste twee op.",ok:"13."},
+{t:"De race",x:"Je rent een race en haalt de nummer 2 in.\n\nOp welke plek sta je nu?",a:/^(2|twee|tweede|2e)$/,h:"Je haalt de tweede in, niet de eerste.",ok:"Tweede. Je neemt zijn plek over."},
+{t:"De kubus",x:"Hoeveel zijvlakken heeft een kubus?",a:/^(6|zes)$/,h:"Denk aan een dobbelsteen.",ok:"6. Net als een dobbelsteen."}],
+accuse:{epi:"<p>Acht uit acht! Je hersenen zijn nu officieel warm. De spelleider overhandigt je een symbolisch koekje.</p><p style=\"color:var(--gold)\">Het koekje bestaat niet. Maar de eer wel.</p>"}});
+Object.assign(CASES,{"055":C055,"042":C042,"071":C071,"escape":CESC,"brein":CBR});
+
+let HASH="1165fb897f65499df6c6a00207b56eaf371f3263ccfadd6d7c22f4974a6eb221";
+let SUS,E,P,CF,TL,TOTAL,CASE,CASEID;
+
+/* ---------- STATE ---------- */
+let S,R=null,DB=null,USER=null,unsubs=[],tick=null,Q=Promise.resolve();
+const $=id=>document.getElementById(id),has=x=>S.s.includes(x),okk=r=>!r||has(r);
+const fresh=()=>({s:[],hint:0,notes:"",tab:"overzicht",log:{},done:0});
+function loadCase(id){CASEID=CASES[id]?id:"055";CASE=CASES[CASEID];SUS=CASE.SUS||{};E=CASE.E||[];P=CASE.P;CF=CASE.CF||{};TL=CASE.TL||[];
+  TOTAL=P.length+new Set(Object.values(CF).map(v=>v.split("|")[1]).filter(Boolean)).size;
+  $("lbox").innerHTML=CASE.L;$("bbox").innerHTML=CASE.B;$("dt").textContent=CASE.title.toUpperCase();$("ds").textContent=CASE.sub.toUpperCase();document.title=CASE.title+" — "+CASE.sub}
+function drawPick(){$("pickbox").innerHTML=Object.keys(CASES).map(k=>{const c=CASES[k];return `<button class="start" style="text-align:left" onclick="pick('${k}')">${c.icon} ${c.title}<br><small style="font-family:Inter;letter-spacing:1px;color:#9a9690;font-size:11px">${c.sub} • ${c.kind=="puzzle"?"puzzelspel":"detective"}</small></button>`}).join("")}
+function pick(id){R=null;loadCase(id);load();go("letter")}
+const key=()=>"dh_"+CASEID+"_"+(R?R.code:"solo");
+function load(){S=fresh();try{Object.assign(S,JSON.parse(localStorage.getItem(key())||"{}"))}catch(e){}}
+const sv=()=>{try{localStorage.setItem(key(),JSON.stringify(S))}catch(e){}};
+function toast(m){const t=$("toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),3200)}
+function go(id){document.querySelectorAll(".screen,#dash").forEach(e=>e.classList.remove("active"));$(id).classList.add("active");scrollTo(0,0)}
+function om(t,x){$("mt").textContent=t;$("mx").textContent=x;$("mod").classList.add("on")}function cm(){$("mod").classList.remove("on")}
+$("mod").onclick=e=>{if(e.target.id=="mod")cm()};addEventListener("keydown",e=>{if(e.key=="Escape")cm()});
+const wr=fn=>{Q=Q.then(fn).catch(e=>console.warn("db",e&&e.code||e));return Q};
+const fmt=ms=>{ms=Math.max(0,ms);const s=Math.floor(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")};
+function setBackend(d,u,h){DB=d;USER=u;if(h)HASH=h}
+function admNewCode(){const v=$("np").value.trim();if(v.length<4)return toast("Minimaal 4 tekens.");sha(v).then(h=>{if(!DB||!DB.setAdminHash)return;DB.setAdminHash(h).then(()=>{HASH=h;$("np").value="";toast("Beheerderscode gewijzigd.")}).catch(()=>toast("Wijzigen mislukt."))})}
+
+/* ---------- MENU & WEDSTRIJD ---------- */
+
+function leave(){unsubs.forEach(f=>f());unsubs=[];clearInterval(tick);R=null;go("home")}
+async function uid(){try{return (USER&&USER.id&&await USER.id())||("g"+Math.random().toString(36).slice(2,8))}catch(e){return "g"+Math.random().toString(36).slice(2,8)}}
+async function joinRace(){
+  const name=$("jn").value.trim(),code=$("jc").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(!name||!code)return toast("Vul je naam en de code in.");
+  if(!DB)return toast("Wedstrijden zijn niet beschikbaar: Firebase is niet gekoppeld. Speel solo.");
+  try{if(USER&&USER.can&&USER.can("data.write")===false)return toast("Je hebt alleen kijkrechten. Gebruik 'Klassement bekijken', of vraag om Bijdrager-rechten.");
+  const rs=await DB.doc("races/"+code).get();if(!rs.exists)return toast("Onbekende wedstrijdcode.");
+  const rd=rs.data();if(rd.status=="done")return toast("Deze wedstrijd is afgelopen.");
+  const id=await uid(),pref=DB.doc("races/"+code+"/players/"+id),ps=await pref.get();
+  loadCase(rd.case||"055");R={code,id,name,race:rd,mode:rd.mode||"sync",players:[],started:false,me:null};load();
+  if(ps.exists)R.me=ps.data();else{R.me={name,solved:S.s.length,done:S.done?true:false,hint:S.hint,joinedAt:Date.now(),startedAt:null};await wr(()=>pref.set(R.me))}
+  $("wc").textContent=code;$("wb").style.display="none";go("wait");
+  unsubs.push(DB.doc("races/"+code).onSnapshot(sn=>{if(!sn.exists)return;R.race=sn.data();raceUpdate()},e=>toast("Verbinding verbroken.")));
+  unsubs.push(DB.collection("races/"+code+"/players").onSnapshot(sn=>{R.players=sn.docs.map(d=>Object.assign({id:d.id},d.data()));const m=R.players.find(p=>p.id==R.id);if(m)R.me=m;$("wp").textContent="Spelers: "+R.players.map(p=>p.name).join(", ");if(R.started){hud();if(S.tab=="wedstrijd")render()}else raceUpdate()}));
+  }catch(e){toast("Meedoen mislukt ("+(e&&e.code||"fout")+").")}
+}
+function t0(){return R?(R.mode=="solo"?(R.me&&R.me.startedAt):R.race.startAt):null}
+function beginPlay(resume){R.started=true;clearInterval(tick);tick=setInterval(hud,1000);if(resume){go("dash");render()}else go("letter")}
+function raceUpdate(){if(!R)return;const st=R.race.status;
+  if(R.mode=="solo"){
+    if(R.started){hud();if(st=="done")toast("🏆 De wedstrijd is gesloten. Je tijd blijft staan.");return}
+    if(R.me&&R.me.startedAt){beginPlay(true);return}
+    if(st=="open"){$("ws").textContent="Je speelt los van de anderen. Je tijd start pas als jij op de knop drukt.";$("wb").style.display=""}
+    else{$("ws").textContent="Deze wedstrijd is gesloten.";$("wb").style.display="none"}
+    return}
+  if(st=="running"&&!R.started){if(!S.s.length&&!S.done){S=fresh()}beginPlay(false);toast("🏁 De wedstrijd is gestart!")}
+  else if(st=="lobby"&&R.started){R.started=false;S=fresh();sv();clearInterval(tick);go("wait");$("ws").textContent="De beheerder heeft de wedstrijd gereset. Wachten op een nieuwe start…"}
+  else if(st=="done"&&R.started){hud();toast("🏆 De wedstrijd is beëindigd.");S.tab="wedstrijd";if($("dash").classList.contains("active"))render()}
+  hud()}
+async function startMine(){if(!R||R.mode!="solo"||R.started)return;if(R.race.status!="open")return toast("De wedstrijd is gesloten.");
+  const t=Date.now();R.me=Object.assign({},R.me,{startedAt:t});S=fresh();sv();
+  await wr(()=>DB.doc("races/"+R.code+"/players/"+R.id).update({startedAt:t,solved:0,done:false}));beginPlay(false);toast("⏱ Je tijd loopt!")}
+/* kijkers */
+let V={race:null,players:[]};
+async function viewRace(){const code=$("vc").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,"");if(!code)return toast("Voer een code in.");
+  if(!DB)return toast("Kijken werkt alleen als Firebase is gekoppeld.");
+  try{const rs=await DB.doc("races/"+code).get();if(!rs.exists)return toast("Onbekende wedstrijdcode.");
+  unsubs.forEach(f=>f());unsubs=[];V={race:rs.data(),players:[]};drawView(code);
+  unsubs.push(DB.doc("races/"+code).onSnapshot(sn=>{if(sn.exists){V.race=sn.data();drawView(code)}}));
+  unsubs.push(DB.collection("races/"+code+"/players").onSnapshot(sn=>{V.players=sn.docs.map(d=>Object.assign({id:d.id},d.data()));drawView(code)}))}catch(e){toast("Kijken mislukt.")}}
+function drawView(code){$("vb").innerHTML=`<div class="big">${code}</div><p style="text-align:center">${(CASES[V.race.case||"055"]||{}).title||""} • ${V.race.mode=="solo"?"Apart spelen":"Tegelijk starten"} • status: <b class="gold">${{lobby:"wachtkamer",running:"bezig",open:"open",done:"afgelopen"}[V.race.status]||""}</b></p>${board(V)}`}
+function leaveView(){unsubs.forEach(f=>f());unsubs=[];go("home")}
+function ranked(list){return list.slice().sort((a,b)=>(a.done?0:1)-(b.done?0:1)||(a.done?(a.ms||0)-(b.ms||0):(b.solved||0)-(a.solved||0)))}
+function board(X){const L=ranked(R?R.players:X.players);
+  if(!L.length)return "<p>Nog geen spelers.</p>";
+  return `<table class="lb">${L.map((p,i)=>`<tr class="${R&&p.id==R.id?"me":""}"><td>${p.done?["🥇","🥈","🥉"][i]||"#"+(i+1):"•"}</td><td>${(p.name||"?").replace(/</g,"&lt;")}</td><td>${p.done?"✔ opgelost":(p.startedAt||(R&&R.mode!="solo")||(X&&X.race&&X.race.mode!="solo")?(p.solved||0)+"/"+TOTAL+" aanwijzingen":"nog niet gestart")}</td><td class="t">${p.done&&p.ms!=null?fmt(p.ms):""}</td></tr>`).join("")}</table>`}
+
+/* ---------- BEHEERDER ---------- */
+let A={players:[],race:null,code:null};
+async function sha(s){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(e){return ""}}
+async function admLogin(){
+  if(!(window.crypto&&crypto.subtle))return toast("Beveiligde verbinding nodig: open de site via https (bijvoorbeeld je Vercel-link).");
+  const v=$("ac").value.trim(),h1=await sha(v),h2=await sha(v.toLowerCase());
+  if(h1!==HASH&&h2!==HASH)return toast("Onjuiste beheerderscode. Standaard is: jj123");
+  if(!DB){const st=window.FB_STATUS;$("admbox").innerHTML="<h2>Beheerder</h2><p>De code klopt, maar de database is niet verbonden.</p><p class='gold'>"+(st||"Firebase wordt nog geladen. Wacht een paar seconden en probeer het opnieuw.")+"</p><div class='actions'><button class='btn p' onclick='location.reload()'>OPNIEUW LADEN</button><button class='btn' onclick=\"go('home')\">TERUG</button></div>";return}
+  admView()}
+function rnd(){const L="ABCDEFGHJKLMNPQRSTUVWXYZ";return L[Math.random()*24|0]+L[Math.random()*24|0]+L[Math.random()*24|0]+L[Math.random()*24|0]+(10+Math.random()*90|0)}
+function admView(){const b=$("admbox");b.innerHTML=`<h2>Beheerderspaneel</h2><p>Kies een spel, maak een wedstrijdcode aan en deel hem met de spelers. Zij openen de site, kiezen Meedoen en vullen de code in.</p><select id="ncs">${Object.keys(CASES).map(k=>`<option value="${k}">${CASES[k].icon} ${CASES[k].title} — ${CASES[k].sub}</option>`).join("")}</select>
+<select id="nm" style="margin-top:8px"><option value="solo">Apart spelen: iedereen start zelf, de tijd telt per speler</option><option value="sync">Tegelijk starten: jij drukt op START</option></select>
+<div class="row" style="margin-top:8px"><input id="nc" placeholder="Eigen code (leeg = willekeurig)" maxlength="12" style="text-transform:uppercase"><button class="btn p" onclick="admCreate()">NIEUWE WEDSTRIJD</button></div>
+<div class="row" style="margin-top:8px"><input id="ec" placeholder="Bestaande code beheren" maxlength="12" style="text-transform:uppercase"><button class="btn" onclick="admOpen($('ec').value.trim().toUpperCase())">BEHEER</button></div>
+<div class="row" style="margin-top:8px"><input id="np" type="password" placeholder="Nieuwe beheerderscode (optioneel)"><button class="btn" onclick="admNewCode()">WIJZIG</button></div>
+<div id="adm2"></div><div class="actions"><button class="btn" onclick="admLeave()">TERUG</button></div>`}
+function admLeave(){unsubs.forEach(f=>f());unsubs=[];go("home")}
+async function admCreate(){const code=($("nc").value.trim().toUpperCase().replace(/[^A-Z0-9]/g,""))||rnd();
+  try{const ex=await DB.doc("races/"+code).get();if(ex.exists)return toast("Die code bestaat al.");
+  await wr(()=>DB.doc("races/"+code).set({case:$("ncs").value,mode:$("nm").value,status:$("nm").value=="solo"?"open":"lobby",createdAt:Date.now(),startAt:null}));admOpen(code)}catch(e){toast("Aanmaken mislukt ("+(e&&(e.code||e.message)||"fout")+"). Controleer je Firestore-regels.")}}
+async function admOpen(code){if(!code)return;const ex=await DB.doc("races/"+code).get();if(!ex.exists)return toast("Onbekende code.");
+  unsubs.forEach(f=>f());unsubs=[];A={players:[],race:ex.data(),code};admDraw();
+  unsubs.push(DB.doc("races/"+code).onSnapshot(sn=>{if(sn.exists){A.race=sn.data();admDraw()}}));
+  unsubs.push(DB.collection("races/"+code+"/players").onSnapshot(sn=>{A.players=sn.docs.map(d=>Object.assign({id:d.id},d.data()));admDraw()}))}
+function admDraw(){const el=$("adm2");if(!el||!A.code)return;const st=A.race.status,solo=A.race.mode=="solo";
+  el.innerHTML=`<div class="big">${A.code}</div><p style="text-align:center">${(CASES[A.race.case||"055"]||{}).title||""} • ${solo?"Apart spelen":"Tegelijk starten"} • status: <b class="gold">${{lobby:"wachtkamer",running:"bezig",open:"open",done:"afgelopen"}[st]}</b> • ${A.players.length} speler(s)${st=="running"?" • "+fmt(Date.now()-A.race.startAt):""}</p>
+<div class="actions" style="justify-content:center;margin-top:12px">${solo?`<button class="btn g" onclick="admSet('open')">🔓 OPEN</button>`:`<button class="btn g" onclick="admSet('running')">▶ START</button>`}<button class="btn" onclick="admSet('done')">⏹ SLUIT</button><button class="btn p" onclick="admReset()">↺ RESET</button></div>${board(A)}`}
+async function admSet(st){const d={status:st};if(st=="running")d.startAt=Date.now();await wr(()=>DB.doc("races/"+A.code).update(d));toast(st=="running"?"🏁 Wedstrijd gestart!":"Wedstrijd beëindigd.")}
+async function admReset(){if(!confirm("Alle spelers en tijden wissen en terug naar de wachtkamer?"))return;
+  for(const p of A.players)await wr(()=>DB.doc("races/"+A.code+"/players/"+p.id).delete());
+  await wr(()=>DB.doc("races/"+A.code).update({status:A.race.mode=="solo"?"open":"lobby",startAt:null}));toast("Wedstrijd gereset.")}
+setInterval(()=>{if(A.code&&A.race&&A.race.status=="running"&&$("adm").classList.contains("active"))admDraw()},1000);
+
+/* ---------- SPEL ---------- */
+function dash(){if(!R&&S&&!S.t0){S.t0=Date.now();sv()}go("dash");render()}
+function hud(){if(!S)return;$("pb").style.width=(S.s.length/TOTAL*100)+"%";$("pr").textContent="🔎 "+S.s.length+"/"+TOTAL;
+  const rk=$("rk");if(R&&R.started){rk.style.display="";const L=ranked(R.players),pos=L.findIndex(p=>p.id==R.id)+1;const t=t0();rk.textContent="🏁 "+(t?fmt(Date.now()-t):"--:--")+" • #"+pos+"/"+L.length}else rk.style.display="none"}
+function render(){const tabs=CASE.tabs.concat(R?[["wedstrijd","🏁 WEDSTRIJD"]]:[]);if(!tabs.some(t=>t[0]==S.tab))S.tab="overzicht";$("tabs").innerHTML=tabs.map(t=>`<button class="tab ${S.tab==t[0]?"on":""}" onclick="S.tab='${t[0]}';sv();render()">${t[1]}</button>`).join("");hud();$("pg").innerHTML=({overzicht:rO,tijdlijn:rT,bewijs:rB,verdachten:rV,puzzels:rP,notities:rN,conclusie:rC,wedstrijd:rW})[S.tab]();if(S.tab=="notities")bn();scrollTo(0,0)}
+function rW(){return `<div class="card"><h2>🏁 Wedstrijd ${R.code}</h2><p>${R.race.status=="done"?"De wedstrijd is gesloten.":(R.mode=="solo"?"Jij speelt apart: de snelste tijd vanaf jouw eigen start wint.":(CASE.kind=="puzzle"?"Wie het eerst alle puzzels oplost, wint.":"Wie het eerst de juiste dader mét bewijs kiest, wint."))}</p>${board()}</div>`}
+function rO(){return `<div class="g2"><div class="card"><h2>${CASE.kind=="puzzle"?"Het verhaal":"De zaak"}</h2>${CASE.ov}${R?`<p class="gold">Je speelt in wedstrijd ${R.code}. Wie het snelst is, wint.</p>`:""}</div><div class="card"><h2>Jouw opdracht</h2>${CASE.task}</div></div>${TL.length?`<div class="card"><h2>Wat we al weten</h2><div class="tl">${TL.map(t=>`<div class="it"><div class="tm">${t[0]}</div><p><b>${t[1]}</b><br>${t[2]}</p></div>`).join("")}</div></div>`:""}`}
+function rT(){return `<div class="card"><h2>De tijdlijn</h2><div class="paper">${TL.map(t=>`<b>${t[0]}</b> — ${t[1]}<br>${t[2]}<br><br>`).join("")}</div><p class="gold">${CASE.tlnote||""}</p></div>`}
+function rB(){return `<div class="card"><h2>Bewijskamer</h2><p>${E.filter(e=>okk(e[4])).length}/${E.length} stukken.</p><div class="g3">${E.map((e,i)=>{const o=okk(e[4]);return `<div class="ev ${o?"":"lk"}" onclick="ev(${i})"><div class="i">${o?e[1]:"🔒"}</div><h3>${o?e[2]:"Vergrendeld"}</h3><small>${o?"Klik om te openen":(e[4][0]=="p"?"Los puzzel "+e[4].slice(1)+" op":"Verhoor iemand met het juiste bewijs")}</small></div>`}).join("")}</div></div>`}
+function ev(i){const e=E[i];if(!okk(e[4]))return toast("🔒 Nog vergrendeld.");om(e[1]+" "+e[2],e[3])}
+function rV(){return `<div class="card"><h2>Verhoorkamer</h2><p>Stel vragen of confronteer met bewijs. Het goede stuk bij de goede persoon breekt een verhaal.</p></div><div class="g4">${Object.keys(SUS).map(k=>{const s=SUS[k];return `<div class="sus"><div class="fc">${s.f}</div><h2>${s.n}</h2><div class="ro">${s.r}</div><p>${s.d}</p><div class="qs">${s.q.map((q,i)=>`<button onclick="ask('${k}',${i})">❓ ${q[0]}</button>`).join("")}</div><div class="row"><select id="sel_${k}">${E.filter(e=>okk(e[4])).map(e=>`<option value="${e[0]}">${e[1]} ${e[2]}</option>`).join("")}</select><button class="btn p" onclick="conf('${k}')">CONFRONTEER</button></div><div>${S.log[k]||""}</div></div>`}).join("")}</div>`}
+function ask(k,i){const q=SUS[k].q[i];S.log[k]=(S.log[k]||"")+`<div class="dlg"><i>${q[0]}</i>${q[1]}</div>`;sv();render()}
+function conf(k){const e=$("sel_"+k).value,r=CF[k+"|"+e];let h;if(!r)h=`<div class="dlg">${SUS[k].n.split(" ")[0]} kijkt je aan. “Wat wilt u hiermee zeggen?”</div>`;else{const[p,c]=r.split("|");h=`<div class="dlg cf">${p}</div>`;if(c&&!has(c)){S.s.push(c);toast("🔓 Nieuw bewijs in de bewijskamer");prog()}}S.log[k]=(S.log[k]||"")+h;sv();render()}
+function prog(){if(R&&DB)wr(()=>DB.doc("races/"+R.code+"/players/"+R.id).update({solved:S.s.length,hint:S.hint}))}
+function rP(){return P.map((p,i)=>{const n=i+1,d=has("p"+n);return `<div class="pz"><div class="pn">PUZZEL 0${n}</div><h2>${p.t}</h2><div class="paper">${p.x.replace(/\n/g,"<br>")}</div>${d?"":`<div class="row"><input id="a${n}" placeholder="Antwoord..." onkeydown="if(event.key=='Enter')sol(${n})"><button class="btn p" onclick="sol(${n})">CONTROLEREN</button><button class="btn" onclick="hint(${n})">💡 HINT</button></div>`}<div class="ok ${d?"s":""}"><b>Correct.</b> ${p.ok}</div></div>`}).join("")}
+function sol(n){const v=$("a"+n).value.trim().toLowerCase().replace(/\s+/g," ");if(P[n-1].a.test(v)){S.s.push("p"+n);toast("✓ Puzzel "+n+" opgelost");if(CASE.kind=="puzzle"&&S.s.length==P.length){finish();S.tab="conclusie";toast("🏁 Alles opgelost!")}sv();prog();render()}else{$("a"+n).classList.add("fl");toast("✕ Niet correct. Probeer het nog eens.")}}
+function hint(n){S.hint++;sv();toast("💡 "+P[n-1].h)}
+function rN(){return `<div class="card"><h2>Onderzoekersnotities</h2><p>Lokaal opgeslagen.</p><textarea id="nt" placeholder="Wie loog? Wat doet dat veertje? Wie had de sleutel?">${S.notes.replace(/</g,"&lt;")}</textarea></div>`}
+function bn(){$("nt").oninput=e=>{S.notes=e.target.value;sv()}}
+function rankOf(){const sc=Math.round(S.s.length/TOTAL*100)-S.hint*6;return sc>=90?"S":sc>=70?"A":sc>=45?"B":"C"}
+function exInfo(){if(!R)return S.ms?`<p class="gold" style="text-align:center">⏱ Je tijd: <b>${fmt(S.ms)}</b></p><div class="row"><input id="rn" placeholder="Jouw naam" maxlength="20"><button class="btn p" onclick="mkCode()">MAAK UITSLAGCODE</button></div><p id="rc" style="word-break:break-all"></p>`:"";const ms=R.me&&R.me.ms;return ms!=null?`<p class="gold" style="text-align:center">🏁 Je tijd: <b>${fmt(ms)}</b>. Bekijk het klassement onder het tabblad Wedstrijd.</p>`:""}
+function finish(){if(!S.done){S.done=1;if(!R&&!S.ms&&S.t0)S.ms=Date.now()-S.t0;sv();const T=t0();if(R&&DB&&T&&R.race.status!="done"&&!(R.me&&R.me.done)){const now=Date.now(),ms=now-T;R.me=Object.assign({},R.me,{done:true,ms});wr(()=>DB.doc("races/"+R.code+"/players/"+R.id).update({done:true,finishedAt:now,solved:S.s.length,hint:S.hint,ms}))}}return exInfo()}
+function rC(){const A=CASE.accuse;
+  if(CASE.kind=="puzzle"){if(!S.done)return `<div class="fin"><div style="font-size:48px">${CASE.icon}</div><h1>Nog niet klaar</h1><p style="color:#85868b">Je hebt ${S.s.length} van de ${P.length} puzzels opgelost.</p></div>`;
+    return `<div class="fin"><div class="rank">${rankOf()}</div><p class="gold" style="letter-spacing:3px">${CASE.title.toUpperCase()} — KLAAR</p>${exInfo()}<div style="text-align:left">${A.epi}</div><p style="color:var(--muted)">Opgelost: ${S.s.length}/${TOTAL} • Hints: ${S.hint}</p></div>`}
+  const o=a=>a.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("");
+  return `<div class="fin"><div style="font-size:54px">🔎</div><h1>Het laatste verhoor</h1><p style="color:#85868b">${A.q}</p><select id="fs"><option value="">Kies een verdachte...</option>${o(Object.keys(SUS).map(k=>[k,SUS[k].n]))}</select><select id="fb"><option value="">Kies het sterkste bewijs...</option>${o(A.proofs)}</select><button class="btn p" style="width:100%;margin-top:14px" onclick="acc()">CONCLUSIE VERSTUREN</button><div class="res" id="res"></div></div>`}
+function acc(){const A=CASE.accuse,s=$("fs").value,b=$("fb").value;if(!s||!b)return toast("Kies beide.");const r=$("res");r.style.display="block";let h;
+  if(s==A.culprit&&b==A.proof){const ex=finish();h=`<div class="rank">${rankOf()}</div><p style="text-align:center;color:var(--gold);letter-spacing:3px">${CASE.title.toUpperCase()} — OPGELOST</p>${ex}${A.epi}<p style="color:var(--muted)">Opgelost: ${S.s.length}/${TOTAL} • Hints: ${S.hint}</p>`}
+  else if(s==A.culprit)h=`<b style="color:var(--gold)">JUISTE NAAM, ZWAK DOSSIER.</b><p>De officier wil meer dan een gevoel. Zoek het bewijs dat alle sporen verbindt.</p>`;
+  else h=`<b style="color:var(--red2)">VERKEERDE CONCLUSIE</b><p>${A.wrong[s]||"Dat klopt niet."}</p>`;
+  r.innerHTML=h;r.scrollIntoView({behavior:"smooth",block:"center"})}
+function ck(t){let h=0;for(const c of t)h=(h*31+c.charCodeAt(0))%9973;return h}
+function mkCode(){const n=$("rn").value.trim().replace(/[|]/g,"");if(!n)return toast("Vul je naam in.");const t=n+"|"+S.ms+"|"+S.hint;const code="D055-"+btoa(unescape(encodeURIComponent(t+"|"+ck(t))));
+  $("rc").innerHTML="Stuur deze code naar je vrienden of de beheerder:<br><b class='gold'>"+code+"</b><br><button class='btn' style='margin-top:8px' onclick=\"navigator.clipboard&&navigator.clipboard.writeText('"+code+"').then(()=>toast('Gekopieerd'))\">KOPIEER</button>"}
+function cmpGo(){const rows=[],bad=[];$("cin").value.split(/\s+/).filter(Boolean).forEach(c=>{try{const t=decodeURIComponent(escape(atob(c.replace(/^D055-/,"")))).split("|");const body=t.slice(0,3).join("|");if(t.length!=4||ck(body)!=+t[3])throw 0;rows.push({n:t[0],ms:+t[1],h:+t[2]})}catch(e){bad.push(c.slice(0,12)+"…")}});
+  rows.sort((a,b)=>a.ms-b.ms);$("cout").innerHTML=(rows.length?`<table class="lb">${rows.map((r,i)=>`<tr><td>${["🥇","🥈","🥉"][i]||"#"+(i+1)}</td><td>${r.n.replace(/</g,"&lt;")}</td><td>${r.h} hint(s)</td><td class="t">${fmt(r.ms)}</td></tr>`).join("")}</table>`:"<p>Geen geldige codes gevonden.</p>")+(bad.length?`<p class="red">Ongeldig: ${bad.join(", ")}</p>`:"")}
+function reset(){if(R)return toast('Resetten kan niet tijdens een wedstrijd.');if(!confirm("Je voortgang wissen en opnieuw beginnen?"))return;try{localStorage.removeItem(key())}catch(e){}S=fresh();if(R&&DB)wr(()=>DB.doc("races/"+R.code+"/players/"+R.id).update({solved:0,done:false,hint:0,finishedAt:null}));render()}
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteField, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBF_pZrIim-96GSnO4yDjHLXPSLOzQm8g8",
+  authDomain: "weekplanning-6c800.firebaseapp.com",
+  projectId: "weekplanning-6c800",
+  storageBucket: "weekplanning-6c800.firebasestorage.app",
+  messagingSenderId: "528655237542",
+  appId: "1:528655237542:web:7b96b2833a6545fded0f67"
+};
+
+if(FIREBASE_CONFIG.apiKey.startsWith("JOUW")){window.FB_STATUS="De Firebase-config is nog niet ingevuld.";console.warn("Firebase niet ingesteld: alleen solo-modus.")}
+else try{
+  const app=initializeApp(FIREBASE_CONFIG),auth=getAuth(app),fs=getFirestore(app);
+  await signInAnonymously(auth);
+  const ref=doc(fs,"appState","main"),clone=o=>JSON.parse(JSON.stringify(o||{}));
+  let ST={races:{}};const subs=new Set();
+  onSnapshot(ref,sn=>{ST=sn.exists()?sn.data():{};if(!ST.races)ST.races={};subs.forEach(f=>f())},e=>console.warn("Firestore",e));
+  const rd=c=>{const r=ST.races[c];if(!r)return null;const d=clone(r);delete d.players;return d};
+  const sd=(id,d)=>({id,exists:!!d,data:()=>d?clone(d):undefined});
+  const sub=(f,n)=>{const g=()=>n(f());subs.add(g);g();return()=>subs.delete(g)};
+  const shim={
+    doc(path){const p=path.split("/"),c=p[1];
+      if(p.length==2)return{
+        get:async()=>sd(c,rd(c)),
+        set:async d=>setDoc(ref,{races:{[c]:clone(d)}},{merge:true}),
+        update:async d=>setDoc(ref,{races:{[c]:clone(d)}},{merge:true}),
+        onSnapshot:n=>sub(()=>sd(c,rd(c)),n)};
+      const id=p[3],pl=()=>((ST.races[c]||{}).players||{})[id]||null;
+      return{
+        get:async()=>sd(id,pl()),
+        set:async d=>setDoc(ref,{races:{[c]:{players:{[id]:clone(d)}}}},{merge:true}),
+        update:async d=>setDoc(ref,{races:{[c]:{players:{[id]:clone(d)}}}},{merge:true}),
+        delete:async()=>updateDoc(ref,{["races."+c+".players."+id]:deleteField()}),
+        onSnapshot:n=>sub(()=>sd(id,pl()),n)}},
+    collection(path){const c=path.split("/")[1];
+      return{onSnapshot:n=>sub(()=>{const pl=(ST.races[c]||{}).players||{};return{docs:Object.keys(pl).map(i=>sd(i,pl[i]))}},n)}},
+    setAdminHash:h=>setDoc(doc(fs,"meta","setup"),{adminHash:h},{merge:true})
+  };
+  let hash=null;
+  try{const m=await getDoc(doc(fs,"meta","setup"));if(m.exists()&&m.data().adminHash)hash=m.data().adminHash}catch(e){}
+  setBackend(shim,{id:async()=>auth.currentUser.uid,can:()=>true},hash);
+}catch(e){const c=e&&e.code||"";const tip={"auth/operation-not-allowed":"Zet Anonymous aan bij Authentication → Sign-in method.","auth/unauthorized-domain":"Voeg je Vercel-domein toe bij Authentication → Settings → Authorized domains.","auth/invalid-api-key":"De apiKey klopt niet.","auth/configuration-not-found":"Authentication is nog niet ingeschakeld in je Firebase-project."}[c]||"";window.FB_STATUS="Firebase-fout: "+(c||(e&&e.message)||"onbekend")+(tip?". "+tip:"");console.warn("Firebase-fout:",e)}
+</script>
+</body></html>
